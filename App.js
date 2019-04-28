@@ -10,11 +10,12 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Splash from "./components/Splash";
 import Allergies from "./components/Allergies";
+import Lookup from "./components/Lookup";
 
 type Props = {};
 export default class App extends Component<Props> {
   render() {
-    return <Allergies />;
+    return <Lookup />;
   }
 }
 
