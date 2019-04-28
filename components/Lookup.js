@@ -33,7 +33,8 @@ export default class Lookup extends Component {
       image: "",
       brand: "",
       label: "",
-      ingredients: ""
+      ingredients: "",
+      hasAllergens: []
     };
   }
 
@@ -44,16 +45,37 @@ export default class Lookup extends Component {
         this.setState({
           savedAllergens: JSON.parse(getSavedAllergens)
         });
-        console.log(this.state);
       }
     } catch (error) {
       console.error(error);
     }
   }
 
+  allergenCheck = healthLabels => {
+    let healthLabelstoString = healthLabels.join();
+    let positiveAllergens = [];
+
+    this.state.savedAllergens.forEach(allergen => {
+      if (healthLabelstoString.indexOf(allergen.toUpperCase()) < 0) {
+        positiveAllergens.push(allergen);
+      }
+    });
+
+    this.setState(
+      {
+        hasAllergens: positiveAllergens
+      },
+      function() {
+        console.log("newState: ", this.state);
+      }
+    );
+  };
+
   searchUPC = async upc => {
-    // 8850539240352
-    // 074822706594
+    // 8850539240352 Red Curry Paste > no interactions
+    // 074822706594 Peanut Butter > peanuts
+    // 040000002376 M&M minis > milk
+    // 033617000460 Wasa crackers > wheat, gluten
     try {
       // API request to get basic upc info but more impotantly 'foodId'
       const upcInfo = await axios.get(
@@ -66,26 +88,34 @@ export default class Lookup extends Component {
       const label = upcInfo.data.hints[0].food.label;
       const ingredients = upcInfo.data.hints[0].food.foodContentsLabel;
 
+      this.setState({
+        upc,
+        image,
+        brand,
+        label,
+        ingredients
+      });
+
       // Secondary API request to get allergen label info
       const postHeaders = {
         "Content-Type": "application/json"
-      }
+      };
 
       const jsonBody = {
-        "ingredients": [
+        ingredients: [
           {
-            "foodId": foodId
+            foodId
           }
         ]
-      }
+      };
 
       const allergenLabels = await axios.post(
         `https://api.edamam.com/api/food-database/nutrients?app_id=${appId}&app_key=${appKey}`,
-        jsonBody, postHeaders
+        jsonBody,
+        postHeaders
       );
 
-      console.log("cautions: ", allergenLabels.data.cautions, "healthLabels: ", allergenLabels.data.healthLabels);
-
+      this.allergenCheck(allergenLabels.data.healthLabels);
     } catch (error) {
       console.error(error);
     }
@@ -94,7 +124,13 @@ export default class Lookup extends Component {
   render() {
     return (
       <ScrollView keyboardShouldPersistTaps="handled">
-        <View style={styles.heading}>
+        <View
+          style={
+            this.state.hasAllergens.length > 0
+              ? styles.headingRed
+              : styles.headingGreen
+          }
+        >
           <Text style={styles.headingText}>UPC Lookup</Text>
         </View>
         <View style={styles.searchSection}>
@@ -113,21 +149,38 @@ export default class Lookup extends Component {
             key
           />
         </View>
-        {/* <View>
-          <Image source={require(this.state.image)} />
-          <Text>{}</Text>
-          <Text>{}</Text>
-          <Text>{}</Text>
-          <Text>{}</Text>
-        </View> */}
+        <View>
+          {this.state.image ? (
+            <Image
+              style={styles.image}
+              source={{
+                uri: this.state.image
+              }}
+            />
+          ) : (
+            <Icon name="utensils" size={20} color="#000" />
+          )}
+          <Text>UPC: {this.state.upc}</Text>
+          <Text>Name: {this.state.label}</Text>
+          <Text>Brand: {this.state.brand}</Text>
+          <Text>Ingredients: {this.state.ingredients}</Text>
+          <Text>{this.state.hasAllergens}</Text>
+        </View>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  heading: {
+  headingGreen: {
     backgroundColor: "#bfd774",
+    height: 100,
+    justifyContent: "flex-end",
+    paddingLeft: 20,
+    paddingBottom: 10
+  },
+  headingRed: {
+    backgroundColor: "#ff0800",
     height: 100,
     justifyContent: "flex-end",
     paddingLeft: 20,
@@ -156,62 +209,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     color: "#424242"
   },
-  allAllergens: {
-    backgroundColor: "#ffffff",
-    justifyContent: "center",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    flex: 1
-  },
-  singleAllergen: {
-    margin: 5,
-    width: 150,
-    height: 150,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  allergenImg: {
+  image: {
     width: 100,
-    height: 100,
-    borderWidth: 1.5,
-    borderColor: "#ffffff",
-    borderRadius: 50
-  },
-  allergenTxt: {
-    marginTop: 5,
-    textAlign: "center",
-    color: "#e8e8e8",
-    fontSize: 20
-  },
-  allergenTxtSelected: {
-    marginTop: 5,
-    textAlign: "center",
-    color: "#ebbf75",
-    fontSize: 20
-  },
-  saveContainer: {
-    flex: 1,
-    justifyContent: "center",
-    backgroundColor: "#ffffff",
-    padding: 20
-  },
-  savedButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#DDDDDD",
-    height: 60,
-    borderRadius: 5
-  },
-  saveChangesButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#a4c639",
-    height: 60,
-    borderRadius: 5
-  },
-  saveText: {
-    color: "#ffffff",
-    fontSize: 20
+    height: 100
   }
 });
 

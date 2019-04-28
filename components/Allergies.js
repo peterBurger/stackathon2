@@ -13,13 +13,13 @@ import AsyncStorage from "@react-native-community/async-storage";
 // For use in render() below
 // const allergens = [
 //   "Milk",
-//   "Eggs",
+//   "Egg",
 //   "Fish",
-//   "Crustaceans",
-//   "Treenuts",
-//   "Peanuts",
+//   "Shellfish",
+//   "Tree_nut",
+//   "Peanut",
 //   "Wheat",
-//   "Soybeans",
+//   "Soy",
 //   "Sesame"
 // ];
 
@@ -28,13 +28,14 @@ export default class Allergies extends Component {
     super(props);
     this.state = {
       Milk: false,
-      Eggs: false,
+      Egg: false,
       Fish: false,
-      Crustaceans: false,
-      Treenuts: false,
-      Peanuts: false,
+      Shellfish: false,
+      Tree_nut: false,
+      Peanut: false,
       Wheat: false,
-      Soybeans: false,
+      Gluten: false,
+      Soy: false,
       Sesame: false,
       saved: true
     };
@@ -130,24 +131,22 @@ export default class Allergies extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.singleAllergen}
-            onPress={() => this.onPress("Eggs")}
+            onPress={() => this.onPress("Egg")}
           >
             <Image
               style={styles.allergenImg}
               source={
-                this.state.Eggs
+                this.state.Egg
                   ? require("../assets/icons/eggs_amber_200x200.jpg")
                   : require("../assets/icons/eggs_grey_200x200.jpg")
               }
             />
             <Text
               style={
-                this.state.Eggs
-                  ? styles.allergenTxtSelected
-                  : styles.allergenTxt
+                this.state.Egg ? styles.allergenTxtSelected : styles.allergenTxt
               }
             >
-              Eggs
+              Egg
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -174,68 +173,68 @@ export default class Allergies extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.singleAllergen}
-            onPress={() => this.onPress("Crustaceans")}
+            onPress={() => this.onPress("Shellfish")}
           >
             <Image
               style={styles.allergenImg}
               source={
-                this.state.Crustaceans
+                this.state.Shellfish
                   ? require("../assets/icons/crustaceans_amber_200x200.jpg")
                   : require("../assets/icons/crustaceans_grey_200x200.jpg")
               }
             />
             <Text
               style={
-                this.state.Crustaceans
+                this.state.Shellfish
                   ? styles.allergenTxtSelected
                   : styles.allergenTxt
               }
             >
-              Crustaceans
+              Shellfish
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.singleAllergen}
-            onPress={() => this.onPress("Treenuts")}
+            onPress={() => this.onPress("Tree_nut")}
           >
             <Image
               style={styles.allergenImg}
               source={
-                this.state.Treenuts
-                  ? require("../assets/icons/treenuts_amber_200x200.jpg")
-                  : require("../assets/icons/treenuts_grey_200x200.jpg")
+                this.state.Tree_nut
+                  ? require("../assets/icons/tree_nut_amber_200x200.jpg")
+                  : require("../assets/icons/tree_nut_grey_200x200.jpg")
               }
             />
             <Text
               style={
-                this.state.Treenuts
+                this.state.Tree_nut
                   ? styles.allergenTxtSelected
                   : styles.allergenTxt
               }
             >
-              Treenuts
+              Tree nut
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.singleAllergen}
-            onPress={() => this.onPress("Peanuts")}
+            onPress={() => this.onPress("Peanut")}
           >
             <Image
               style={styles.allergenImg}
               source={
-                this.state.Peanuts
+                this.state.Peanut
                   ? require("../assets/icons/peanuts_amber_200x200.jpg")
                   : require("../assets/icons/peanuts_grey_200x200.jpg")
               }
             />
             <Text
               style={
-                this.state.Peanuts
+                this.state.Peanut
                   ? styles.allergenTxtSelected
                   : styles.allergenTxt
               }
             >
-              Peanuts
+              Peanut
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -262,21 +261,41 @@ export default class Allergies extends Component {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.singleAllergen}
-            onPress={() => this.onPress("Soybeans")}
+            onPress={() => this.onPress("Gluten")}
           >
             <Image
               style={styles.allergenImg}
               source={
-                this.state.Soybeans
+                this.state.Gluten
+                  ? require("../assets/icons/wheat_amber_200x200.jpg")
+                  : require("../assets/icons/wheat_grey_200x200.jpg")
+              }
+            />
+            <Text
+              style={
+                this.state.Gluten
+                  ? styles.allergenTxtSelected
+                  : styles.allergenTxt
+              }
+            >
+              Gluten
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.singleAllergen}
+            onPress={() => this.onPress("Soy")}
+          >
+            <Image
+              style={styles.allergenImg}
+              source={
+                this.state.Soy
                   ? require("../assets/icons/soybeans_amber_200x200.jpg")
                   : require("../assets/icons/soybeans_grey_200x200.jpg")
               }
             />
             <Text
               style={
-                this.state.Soybeans
-                  ? styles.allergenTxtSelected
-                  : styles.allergenTxt
+                this.state.Soy ? styles.allergenTxtSelected : styles.allergenTxt
               }
             >
               Soybeans
