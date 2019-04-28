@@ -8,6 +8,7 @@ import {
   Image,
   ScrollView
 } from "react-native";
+import AsyncStorage from "@react-native-community/async-storage";
 
 // For use in render() below
 // const allergens = [
@@ -34,19 +35,43 @@ export default class Allergies extends Component {
       Peanuts: false,
       Wheat: false,
       Soybeans: false,
-      Sesame: false
+      Sesame: false,
+      saved: true
     };
   }
 
+  async componentDidMount() {
+    const getSavedAllergens = await AsyncStorage.getItem("selectedAllergens");
+    if (getSavedAllergens) {
+      JSON.parse(getSavedAllergens).forEach(allergen => {
+        this.setState({
+          [allergen]: true
+        });
+      });
+    }
+  }
+
   onPress = allergen => {
-    this.setState(
-      {
-        [allergen]: !this.state[allergen]
-      },
-      function() {
-        // console.log("after: ", this.state);
-      }
-    );
+    this.setState({
+      [allergen]: !this.state[allergen],
+      saved: false
+    });
+  };
+
+  onSave = async () => {
+    try {
+      const selectedAllergens = Object.keys(this.state).filter(allergen => {
+        if (this.state[allergen]) return allergen;
+      });
+      if (selectedAllergens)
+        await AsyncStorage.setItem(
+          "selectedAllergens",
+          JSON.stringify(selectedAllergens)
+        );
+      this.setState({ saved: true });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   render() {
@@ -280,10 +305,30 @@ export default class Allergies extends Component {
             </Text>
           </TouchableOpacity>
         </View>
+        <View style={styles.saveContainer}>
+          <TouchableOpacity
+            style={
+              this.state.saved ? styles.savedButton : styles.saveChangesButton
+            }
+            onPress={() => this.onSave()}
+          >
+            <Text style={styles.saveText}>
+              {this.state.saved ? " Saved " : " Save Changes "}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     );
   }
 }
+
+// _storeData = async () => {
+//   try {
+//     await AsyncStorage.setItem("@MySuperStore:key", "I like to save it.");
+//   } catch (error) {
+//     // Error saving data
+//   }
+// };
 
 const styles = StyleSheet.create({
   heading: {
@@ -298,7 +343,7 @@ const styles = StyleSheet.create({
     fontSize: 30
   },
   allAllergens: {
-    backgroundColor: "white",
+    backgroundColor: "#ffffff",
     justifyContent: "center",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -315,7 +360,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderWidth: 1.5,
-    borderColor: "white",
+    borderColor: "#ffffff",
     borderRadius: 50
   },
   allergenTxt: {
@@ -328,6 +373,30 @@ const styles = StyleSheet.create({
     marginTop: 5,
     textAlign: "center",
     color: "#ebbf75",
+    fontSize: 20
+  },
+  saveContainer: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "#ffffff",
+    padding: 20
+  },
+  savedButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#DDDDDD",
+    height: 60,
+    borderRadius: 5
+  },
+  saveChangesButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#a4c639",
+    height: 60,
+    borderRadius: 5
+  },
+  saveText: {
+    color: "#ffffff",
     fontSize: 20
   }
 });
