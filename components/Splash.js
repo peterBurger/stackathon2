@@ -11,6 +11,13 @@ import { StyleSheet, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 export default class Splash extends Component {
+  async componentDidMount() {
+    //ideally, would be checking API connection here
+    setTimeout(() => {
+      this.props.navigation.navigate("App");
+    }, 2000);
+  }
+
   render() {
     return (
       <View style={styles.container}>
