@@ -12,9 +12,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
-
-const appKey = "a2ba1fd53d897ac8fb0a84cb484e98ee";
-const appId = "34041e6c";
+import { appId, appKey } from "../keys";
 
 export default class Scan extends Component {
   constructor(props) {
@@ -33,11 +31,14 @@ export default class Scan extends Component {
   async componentDidMount() {
     try {
       const getSavedAllergens = await AsyncStorage.getItem("selectedAllergens");
-      if (getSavedAllergens) {
-        this.setState({
-          savedAllergens: JSON.parse(getSavedAllergens)
-        });
-      }
+      // if (getSavedAllergens) {
+      //   this.setState({
+      //     savedAllergens: JSON.parse(getSavedAllergens)
+      //   });
+      // }
+      this.setState({
+        savedAllergens: JSON.parse(getSavedAllergens)
+      });
     } catch (error) {
       console.error(error);
     }
@@ -74,12 +75,16 @@ export default class Scan extends Component {
       const label = upcInfo.data.hints[0].food.label;
       const ingredients = upcInfo.data.hints[0].food.foodContentsLabel;
 
+      const getSavedAllergens = await AsyncStorage.getItem("selectedAllergens");
+
       this.setState({
+        savedAllergens: JSON.parse(getSavedAllergens),
         upc,
         image,
         brand,
         label,
-        ingredients
+        ingredients,
+        hasAllergens: []
       });
 
       // Secondary API request to get allergen label info
@@ -122,7 +127,7 @@ export default class Scan extends Component {
         <View style={styles.searchSection}>
           <TextInput
             style={styles.input}
-            placeholder="Scan a UPC..."
+            placeholder=" || Scan a UPC || "
             onChangeText={upc => this.setState({ upc })}
             onSubmitEditing={() => this.searchUPC(this.state.upc)}
             key
