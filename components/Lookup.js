@@ -72,7 +72,6 @@ export default class Lookup extends Component {
   };
 
   searchUPC = async upc => {
-    // 8850539240352 Red Curry Paste > no interactions
     // 074822706594 Peanut Butter > peanuts
     // 040000002376 M&M minis > milk
     // 033617000460 Wasa crackers > wheat, gluten
@@ -134,38 +133,52 @@ export default class Lookup extends Component {
           <Text style={styles.headingText}>UPC Lookup</Text>
         </View>
         <View style={styles.searchSection}>
-          <Icon
-            style={styles.searchIcon}
-            name="search"
-            size={20}
-            color="#000"
-            onPress={() => this.searchUPC(this.state.upc)}
-          />
           <TextInput
             style={styles.input}
-            placeholder="Enter UPC..."
+            placeholder="Enter a UPC..."
             onChangeText={upc => this.setState({ upc })}
             onSubmitEditing={() => this.searchUPC(this.state.upc)}
             key
           />
+          <Icon
+            name="search"
+            size={20}
+            color="#bfd774"
+            onPress={() => this.searchUPC(this.state.upc)}
+          />
         </View>
-        <View>
-          {this.state.image ? (
-            <Image
-              style={styles.image}
-              source={{
-                uri: this.state.image
-              }}
-            />
-          ) : (
-            <Icon name="utensils" size={20} color="#000" />
-          )}
-          <Text>UPC: {this.state.upc}</Text>
-          <Text>Name: {this.state.label}</Text>
-          <Text>Brand: {this.state.brand}</Text>
-          <Text>Ingredients: {this.state.ingredients}</Text>
-          <Text>{this.state.hasAllergens}</Text>
+        <View style={styles.upcInfo}>
+          <View style={styles.upcImageContainer}>
+            {this.state.image ? (
+              <Image
+                style={styles.upcImage}
+                source={{
+                  uri: this.state.image
+                }}
+              />
+            ) : (
+              <Icon name="utensils" size={150} color="#d3d3d3" />
+            )}
+          </View>
+          <Text style={styles.upcProp}>NAME</Text>
+          <Text style={styles.upcValue}>{this.state.label}</Text>
+          <Text style={styles.upcProp}>BRAND</Text>
+          <Text style={styles.upcValue}>{this.state.brand}</Text>
+          <Text style={styles.upcProp}>INGREDIENTS</Text>
+          <Text style={styles.upcValue}>{this.state.ingredients}</Text>
+          <Text style={styles.upcProp}>ALLERGENS</Text>
+          {this.state.savedAllergens.map(allergen => {
+            if (this.state.hasAllergens.includes(allergen)) {
+              return (
+                <Text style={styles.upcValue} key={allergen}>
+                  <Icon name="exclamation-circle" size={15} color="#ff0800" />{" "}
+                  {allergen}
+                </Text>
+              );
+            }
+          })}
         </View>
+        <View style={styles.allergenCheck} />
       </ScrollView>
     );
   }
@@ -195,23 +208,44 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff"
-  },
-  searchIcon: {
-    padding: 10
+    backgroundColor: "#ffffff",
+    paddingLeft: 20,
+    paddingBottom: 50,
+    paddingTop: 30
   },
   input: {
-    flex: 1,
     paddingTop: 10,
     paddingRight: 10,
     paddingBottom: 10,
     paddingLeft: 0,
-    backgroundColor: "#fff",
-    color: "#424242"
+    backgroundColor: "#ffffff",
+    fontSize: 20,
+    color: "#000000"
   },
-  image: {
-    width: 100,
-    height: 100
+  upcInfo: {
+    flex: 1,
+    flexDirection: "column"
+  },
+  upcImageContainer: {
+    alignItems: "center",
+    paddingBottom: 50
+  },
+  upcImage: {
+    height: 100,
+    width: 100
+  },
+  upcProp: {
+    fontSize: 15,
+    color: "#d3d3d3",
+    paddingLeft: 20,
+    paddingBottom: 5
+  },
+  upcValue: {
+    fontSize: 20,
+    color: "#000000",
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingBottom: 15
   }
 });
 
