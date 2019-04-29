@@ -12,8 +12,7 @@ import Splash from "./components/Splash";
 import Allergies from "./components/Allergies";
 import Lookup from "./components/Lookup";
 
-type Props = {};
-export default class App extends Component<Props> {
+export default class App extends Component {
   render() {
     return <Lookup />;
   }

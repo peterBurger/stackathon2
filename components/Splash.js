@@ -8,12 +8,13 @@
 
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
-type Props = {};
-export default class Splash extends Component<Props> {
+export default class Splash extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <Icon name="allergies" size={50} color="#ffffff" />
         <Text style={styles.welcome}>allert</Text>
       </View>
     );
