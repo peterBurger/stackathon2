@@ -50,6 +50,7 @@ export default class Allergies extends Component {
         });
       });
     }
+    this.props.navigation.navigate("App");
   }
 
   onPress = allergen => {
@@ -79,7 +80,7 @@ export default class Allergies extends Component {
     return (
       <ScrollView>
         <View style={styles.heading}>
-          <Text style={styles.headingText}>I am allergic to...</Text>
+          <Text style={styles.headingText}>Your allergy profile</Text>
         </View>
         <View style={styles.allAllergens}>
           {/* Can't use due to limiations for images (source cannot be dynamic). See https://facebook.github.io/react-native/docs/image
@@ -359,7 +360,7 @@ const styles = StyleSheet.create({
   },
   headingText: {
     color: "#ffffff",
-    fontSize: 30
+    fontSize: 25
   },
   allAllergens: {
     backgroundColor: "#ffffff",
