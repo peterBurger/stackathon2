@@ -56,4 +56,4 @@ buck-out/
 *.jsbundle
 
 # React Edamam API keys
-keys
+keys.js
