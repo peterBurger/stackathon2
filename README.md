@@ -7,4 +7,10 @@ A lightweight mobile prototype app that allows users to create a personalized fo
 ## Dependencies & Running _Allert_
 1. Install React Native CLI dependencies listed under the [React Native CLI Quickstart](https://facebook.github.io/react-native/docs/getting-started) tab
 2. Fork/clone repo and install all other npm/yarn dependencies
-3. To run the _Allert_ prototype app: `npx react-native run-ios` for iOS or `npx react-native run-android` for Android
+3. `keys.js` file in the root of the repo, which includes your API keys for the Edamam Food Database API. API keys can be requested from Edamam [HERE](https://developer.edamam.com/food-database-api). Example `keys.js` file:
+```
+export const appKey = "{YOUR API KEY}";
+export const appId = "{YOUR API ID}";
+
+```
+4. To run the _Allert_ prototype app: `npx react-native run-ios` for iOS or `npx react-native run-android` for Android
